@@ -46,24 +46,49 @@ module IoddaApi
 	  end
 	
 	public
-
-	  def procedures(taxonomy_ids=[], page=1, page_size=100, languages:['FR'], request_options:{})
+	  
+	  # Retrieves a summary of procedures corresponding to criterias passed in request parameters
+	  # * taxonomy_ids : a single id or an array of ids of taxonomies such as targets, topics, etc. Use the taxonomies endpoint to get all available ids
+	  # * page and page_size : pagination instructions. Use page_size=0 to retrieve everything at once (may be resource sensitive !)
+	  # * languages : array of language codes passed as strings (FR, DE, EN, NL)
+	  # * request_options : other options specific to HTTParty, if needed.
+	  
+	  def procedures(taxonomy_ids='', page=1, page_size=100, languages:['FR'], request_options:{})
+		normalized_taxonomy_ids = taxonomy_ids.is_a?(Array) ? taxonomy_ids.join(',') : taxonomy_ids
 		url = build_url('procedures', 
 						languages:languages,
-						options:{'taxonomyId':taxonomy_ids.join(','),
+						options:{'taxonomyId':normalized_taxonomy_ids,
 								 'page':page,
 								 'pageSize':page_size})
 		response = send_request(url,request_options)
 		#response['items'].first
 	  end
 	  
-	  def procedures_details(procedure_id, languages:['FR'], request_options:{})
+	  # Retrieves a detailed view of one or more procedures whose ids are passed in parameters
+	  # * procedure_ids : a single id or an array of ids of procedures
+	  # * languages : array of language codes passed as strings (FR, DE, EN, NL)
+	  # * request_options : other options specific to HTTParty, if needed.
+	  
+	  def procedures_details(procedure_ids, languages:['FR'], request_options:{})
+		normalized_procedure_ids = procedure_ids.is_a?(Array) ? procedure_ids.join(',') : procedure_ids
 		url = build_url('proceduresDetails', 
 						languages:languages,
-						options:{'procedureId':procedure_id})
+						options:{'procedureId':normalized_procedure_ids})
 		response = send_request(url,request_options)
 		response['items'].first
 	  end
+	  
+	  # Retrieves a tree  view of of all elements of a taxonomy whose id is passed in parameters
+	  # * taxonomy_type_id : a single id of a taxonomy type, among the following :
+	  #	   * 1 = Procedure types
+	  #	   * 2 = Topics
+	  #	   * 3 = Targets
+	  #	   * 4 = Keywords
+	  #	   * 5 = Competencies
+	  #	   * 6 = Competent entities
+	  #	   * 8 = Life events
+	  # * languages : array of language codes passed as strings (FR, DE, EN, NL)
+	  # * request_options : other options specific to HTTParty, if needed.
 	  
 	  def taxonomies(taxonomy_type_id, languages:['FR'], request_options:{})
 		url = build_url('taxonomies', 
@@ -73,12 +98,21 @@ module IoddaApi
 		response['items']
 	  end
 	  
+	  # Retrieves a tree of all the administrations associated to the subscription
+	  # * languages : array of language codes passed as strings (FR, DE, EN, NL)
+	  # * request_options : other options specific to HTTParty, if needed.
+	  
 	  def administrations(languages:['FR'], request_options:{})
 		url = build_url('administrations', 
 						languages:languages)
 		response = send_request(url,request_options)
 		response['items']
 	  end
+	  
+	  # Retrieves a detailed view of a specific administration whose id is specified in parameters.
+	  # * administration_id: id of an administration
+	  # * languages : array of language codes passed as strings (FR, DE, EN, NL)
+	  # * request_options : other options specific to HTTParty, if needed.
 	  
 	  def administrations_details(administration_id, languages:['FR'], request_options:{})
 		url = build_url('administrationsDetails', 
@@ -88,7 +122,12 @@ module IoddaApi
 		response['items'].first
 	  end
 	  
-	  # https://iodda.spw.valid.wallonie.be/subscriber/api/v1/modifiedProcedures?lang=FR&modifiedOnOrAfter=2022-04-24T11%3A26%3A00%2B02%3A00&page=3
+	  # Retrieves a list of mutations (informations that have been created, deleted or updated)
+	  # since a datetime specified in parameters.
+	  # * modified_on_or_after: a datetime (Time object)
+	  # * languages : array of language codes passed as strings (FR, DE, EN, NL)
+	  # * request_options : other options specific to HTTParty, if needed.
+	  
 	  def modified_procedures(modified_on_or_after, languages:['FR'], request_options:{})
 	    url = build_url('modifiedProcedures', 
 						languages:languages,
