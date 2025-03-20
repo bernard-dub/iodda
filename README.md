@@ -9,11 +9,11 @@
 
 Examples :
 
-> iodda = IoddaApi::Client.new(api_key:'abdcefg-12345678')
-> iodda.taxonomies(3)
-> iodda.procedures([1234,5678])
-> iodda.procedures(1234)
-> iodda.procedures_details(1931)
-> iodda.procedures_details([1931,2345])
-> iodda.administrations
-> iodda.administrations_details(2342)
+	iodda = IoddaApi::Client.new(api_key:'abdcefg-12345678')
+	iodda.taxonomies(3)
+	iodda.procedures([1234,5678])
+	iodda.procedures(1234)
+	iodda.procedures_details(1931)
+	iodda.procedures_details([1931,2345])
+	iodda.administrations
+	iodda.administrations_details(2342)
