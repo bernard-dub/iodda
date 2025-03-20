@@ -87,6 +87,14 @@ module IoddaApi
 		response = send_request(url,request_options)
 		response['items'].first
 	  end
-
+	  
+	  # https://iodda.spw.valid.wallonie.be/subscriber/api/v1/modifiedProcedures?lang=FR&modifiedOnOrAfter=2022-04-24T11%3A26%3A00%2B02%3A00&page=3
+	  def modified_procedures(modified_on_or_after, languages:['FR'], request_options:{})
+	    url = build_url('modifiedProcedures', 
+						languages:languages,
+						options:{'modifiedOnOrAfter':modified_on_or_after.to_fs(:iso8601)})
+		response = send_request(url,request_options)
+	  end
+	  
 	end
 end
