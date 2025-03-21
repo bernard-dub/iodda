@@ -90,10 +90,11 @@ module IoddaApi
 	  # * languages : array of language codes passed as strings (FR, DE, EN, NL)
 	  # * request_options : other options specific to HTTParty, if needed.
 	  
-	  def taxonomies(taxonomy_type_id, languages:['FR'], request_options:{})
+	  def taxonomies(taxonomy_type_ids, languages:['FR'], request_options:{})
+		normalized_taxonomy_type_ids = taxonomy_type_ids.is_a?(Array) ? taxonomy_type_ids.join(',') : taxonomy_type_ids
 		url = build_url('taxonomies', 
 						languages:languages,
-						options:{'taxonomyTypeId':taxonomy_type_id})
+						options:{'taxonomyTypeId':normalized_taxonomy_type_ids})
 		response = send_request(url,request_options)
 		response['items']
 	  end
